@@ -297,6 +297,8 @@ public class RequestARide extends AppCompatActivity implements DatePickerDialog.
             riderRidePost.setIsCompleted((byte) 0);
             riderRidePost.setIsTaken((byte) 0);
             riderRidePost.setCost(Cost);
+
+
             //map to JSON
             ObjectMapper mapper = new ObjectMapper();
             try {

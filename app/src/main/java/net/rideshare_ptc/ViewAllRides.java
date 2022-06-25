@@ -46,7 +46,6 @@ public class ViewAllRides extends AppCompatActivity {
         setContentView(R.layout.activity_view_all_rides2);
         retToMenu = (Button) findViewById(R.id.btnAllRidesReturnMenu);
 
-
         int SDK_INT = Build.VERSION.SDK_INT;
         if (SDK_INT > 8) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();

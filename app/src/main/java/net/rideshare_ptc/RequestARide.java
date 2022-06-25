@@ -119,7 +119,7 @@ public class RequestARide extends AppCompatActivity implements DatePickerDialog.
 
                                 } else {
                                     getRiderRideData();
-                                    if (!errorsFound) { //if we have no errors (mainly used to ensure distance matrix properly worked)
+                                    if (errorsFound == false) { //if we have no errors (mainly used to ensure distance matrix properly worked)
                                         try {
                                             postRiderRideDataCreateRideInDB();
                                         } catch (IOException e) {

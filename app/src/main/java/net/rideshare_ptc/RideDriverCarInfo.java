@@ -127,7 +127,7 @@ public class RideDriverCarInfo extends AppCompatActivity {
 
     private User getUserData(String driverid) throws IOException {
 
-        URL url = new URL("http://10.0.2.2:8080/car?userID=" + driverid); //set URL
+        URL url = new URL("http://10.0.2.2:8080/user?User=" + driverid); //set URL
         HttpURLConnection con = (HttpURLConnection) url.openConnection(); //open connection
         con.setUseCaches(false);
         con.setRequestMethod("GET");//set request method

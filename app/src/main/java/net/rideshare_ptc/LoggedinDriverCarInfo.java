@@ -39,17 +39,13 @@ public class LoggedinDriverCarInfo extends AppCompatActivity {
         TextView carDetails = (TextView) findViewById(R.id.txtCarDetails);
         TextView TxtUserName = (TextView) findViewById(R.id.txtCarUserName);
 
-        ActiveRide active_ride = ActiveRide.getInstance();
-        Ride activeRide = active_ride.getRideInfo();
-        String driverID = activeRide.getDriverID();
-        String driverEmailAdd;
-
 
         try {
             rideDriver = getUserData(driverID);
+
+            usersCar = getCarData(driverID);
             String fName = rideDriver.getUserFName();
             TxtUserName.setText(fName);
-            usersCar = getCarData(driverID);
 
             carDetails.setText(usersCar.toString());
 
@@ -126,7 +122,7 @@ public class LoggedinDriverCarInfo extends AppCompatActivity {
 
     private User getUserData(String driverid) throws IOException {
 
-        URL url = new URL("http://10.0.2.2:8080/car?userID=" + driverid); //set URL
+        URL url = new URL("http://10.0.2.2:8080/user?User=" + driverid); //set URL
         HttpURLConnection con = (HttpURLConnection) url.openConnection(); //open connection
         con.setUseCaches(false);
         con.setRequestMethod("GET");//set request method

@@ -19,6 +19,12 @@ public class MainMenu extends AppCompatActivity {
         Button btnPostRide  = (Button) findViewById(R.id.btnMenuPost);
         Button btnUserProf = (Button) findViewById(R.id.btnMenuViewProf);
         Button btnAllRides = (Button) findViewById(R.id.btnMenuViewRides);
+        LoginManager mgr = LoginManager.getInstance();
+        User loggedInUser = mgr.getLoggedInUser();
+
+        if (loggedInUser.getIsDriver() ==0){
+            btnPostRide.setVisibility(View.GONE);
+        }
 
 
         btnAllRides.setOnClickListener(new View.OnClickListener() {

@@ -66,6 +66,6 @@ public class Car {
                 "\n   Make: " + carMake +
                 "\n   Model:" + carModel +
                 "\n   Color: " + carColor  +
-                "\n   License Plate: " + carPlateNum;
+                "\n   License Plate: \n      " + carPlateNum;
     }
 }

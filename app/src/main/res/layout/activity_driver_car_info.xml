@@ -8,25 +8,27 @@
 
     <TextView
         android:id="@+id/txtCarDetails"
-        android:layout_width="315dp"
-        android:layout_height="304dp"
+        android:layout_width="312dp"
+        android:layout_height="341dp"
+        android:layout_marginTop="20dp"
         android:textAlignment="textStart"
         android:textColor="@color/ptc_DkBlue"
         android:textSize="30sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.494"
         app:layout_constraintStart_toStartOf="parent"
-        tools:layout_editor_absoluteY="296dp" />
+        app:layout_constraintTop_toBottomOf="@+id/txtCarUserName" />
 
     <ImageView
         android:id="@+id/imgCarLogo"
         android:layout_width="405dp"
         android:layout_height="66dp"
-        app:layout_constraintBottom_toTopOf="@+id/txtCarTitle"
+        android:layout_marginTop="24dp"
+        app:layout_constraintBottom_toTopOf="@+id/txtCarDetails"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.638"
+        app:layout_constraintVertical_bias="0.142"
         app:srcCompat="@drawable/ptc_logo_2" />
 
     <Button
@@ -64,19 +66,20 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.497"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.994" />
+        app:layout_constraintTop_toBottomOf="@+id/imgCarLogo"
+        app:layout_constraintVertical_bias="0.9" />
 
     <EditText
         android:id="@+id/txtCarUserName"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="24dp"
+        android:layout_marginBottom="492dp"
         android:ems="10"
+        android:hint="@string/RiderName"
         android:textAlignment="center"
         android:textColor="@color/ptc_DkBlue"
         android:textSize="24sp"
-        app:layout_constraintBottom_toTopOf="@+id/txtCarDetails"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.496"
         app:layout_constraintStart_toStartOf="parent" />

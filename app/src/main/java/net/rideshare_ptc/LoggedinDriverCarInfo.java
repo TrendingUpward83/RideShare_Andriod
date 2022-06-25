@@ -37,7 +37,7 @@ public class LoggedinDriverCarInfo extends AppCompatActivity {
         Button btnAllRides = (Button) findViewById(R.id.btnCarToAllRides);
         //The below textviews will be populated with user's car data or, if none exists,
         TextView carDetails = (TextView) findViewById(R.id.txtCarDetails);
-        TextView userName = (TextView) findViewById(R.id.txtCarUserName);
+        TextView TxtUserName = (TextView) findViewById(R.id.txtCarUserName);
 
         ActiveRide active_ride = ActiveRide.getInstance();
         Ride activeRide = active_ride.getRideInfo();
@@ -48,9 +48,9 @@ public class LoggedinDriverCarInfo extends AppCompatActivity {
         try {
             rideDriver = getUserData(driverID);
             String fName = rideDriver.getUserFName();
-
+            TxtUserName.setText(fName);
             usersCar = getCarData(driverID);
-            userName.setText(fName);
+
             carDetails.setText(usersCar.toString());
 
             //carDetails.setText("User has no active registered cars. \n Driver user cannot accept this any rides at this time.");

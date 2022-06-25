@@ -91,7 +91,7 @@ public class rideDriverProfile extends AppCompatActivity {
         btnCarInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(rideDriverProfile.this, DriverCarInfo.class));
+                startActivity(new Intent(rideDriverProfile.this, RideDriverCarInfo.class));
             }
         });
 

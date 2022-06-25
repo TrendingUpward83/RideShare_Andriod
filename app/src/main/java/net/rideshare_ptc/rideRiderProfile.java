@@ -82,7 +82,7 @@ public class rideRiderProfile extends AppCompatActivity {
                 }
             }
         }
-
+        btnCarInfo.setVisibility(View.GONE);
         btnReturnHome.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -93,7 +93,7 @@ public class rideRiderProfile extends AppCompatActivity {
         btnCarInfo.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                startActivity(new Intent(rideRiderProfile.this, DriverCarInfo.class));
+                startActivity(new Intent(rideRiderProfile.this, LoggedinDriverCarInfo.class));
             }
         });
 

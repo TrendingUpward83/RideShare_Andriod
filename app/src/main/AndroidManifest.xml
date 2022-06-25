@@ -18,6 +18,9 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".RideDriverCarInfo"
+            android:exported="false" />
+        <activity
             android:name=".AcceptRide"
             android:exported="false" />
         <activity
@@ -39,7 +42,7 @@
             android:name=".LoginWelcomeStatusActivity"
             android:exported="false" />
         <activity
-            android:name=".DriverCarInfo"
+            android:name=".LoggedinDriverCarInfo"
             android:exported="false" />
         <activity
             android:name=".UserProfile"

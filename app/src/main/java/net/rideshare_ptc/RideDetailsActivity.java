@@ -17,6 +17,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.ProtocolException;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -61,13 +62,30 @@ public class RideDetailsActivity extends AppCompatActivity {
         TextView msg = (TextView) findViewById(R.id.txtViewRideDetail);
         msg.setMovementMethod(new ScrollingMovementMethod());
         msg.setText(rideInformation);
-        userRiderId = "";
-        userDriverId = "";
-        rideID = 0;
+
         LoginManager mgr = LoginManager.getInstance();
         User loggedInUser = mgr.getLoggedInUser();
+        Byte isDriver = loggedInUser.getIsDriver();
+        ActiveRide active_ride = ActiveRide.getInstance();
+        Integer activeRideID = active_ride.getRideInfo().getRideID();
 
-        int SDK_INT = Build.VERSION.SDK_INT;
+        if (active_ride.getRideInfo().getDriverID()==null){
+            driverDetails.setVisibility(View.INVISIBLE);
+        }
+        else if (active_ride.getRideInfo().getRiderID()==null){
+            riderDetails.setVisibility(View.INVISIBLE);
+        }
+
+        userDriverId = "";
+        userRiderId = "";
+        if (isDriver == 1) {
+            userDriverId = loggedInUser.getUserID();
+        } else if (isDriver == 0) {
+            userRiderId = loggedInUser.getUserID();
+        }
+
+
+            int SDK_INT = Build.VERSION.SDK_INT;
         if (SDK_INT > 8) {
             StrictMode.ThreadPolicy policy = new StrictMode.ThreadPolicy.Builder().permitAll().build();
             StrictMode.setThreadPolicy(policy);
@@ -82,8 +100,7 @@ public class RideDetailsActivity extends AppCompatActivity {
             driverDetails.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    //ActiveRide active_ride = ActiveRide.getInstance();
-                    //String rideDriver = active_ride.getRideInfo().getDriverID();
+
                     //TODO: case handling when not assigned
                     startActivity(new Intent(RideDetailsActivity.this, rideDriverProfile.class));
                 }
@@ -99,30 +116,88 @@ public class RideDetailsActivity extends AppCompatActivity {
             });
 
             acceptRide.setOnClickListener(new View.OnClickListener() {
-                //get Logged in user ID & is Rider/Driver
-                Byte isDriver = loggedInUser.getIsDriver();
-
-
-                //check if ride is available
-
-                //get ride Number
                 @Override
                 public void onClick(View v) {
 
-                 /*   if (isDriver == 1) {
-                        userDriverId = loggedInUser.getUserID();
-                        try {
-                            riderAcceptsRide();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                        if (userDriverId =="") { //if logged in user is a Rider
+                           /* try {
+                                riderAcceptsRide(activeRideID, userRiderId);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            } */
                         }
-                    } else if (isDriver == 0) {
+                        else if (userRiderId ==""){ //if logged in user is a driver
+                            try {
+                                riderAcceptsRide(activeRideID, userRiderId);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
-                    }*/
+                        }
+
+
                 }
             });
         }
+
     }
+
+
+    private Ride riderAcceptsRide(Integer rideID, String riderID) throws IOException {
+        Ride riderAcceptedRide = new Ride();
+        URL url = new URL("http://10.0.2.2:8080/acceptRide/Rider?accRideId="+rideID+"&riderID="+riderID); //set URL
+        HttpURLConnection conWeb = (HttpURLConnection) url.openConnection(); //open connection
+        conWeb.setRequestMethod("POST");//set request method
+        conWeb.setRequestProperty("Content-Type", "application/json"); //set the request content-type header parameter
+        conWeb.setDoOutput(true); //enable this to write content to the connection OUTPUT STREAM
+
+        //Create the request body
+        OutputStream os = conWeb.getOutputStream();
+        String rrideJSON = "";
+        byte[] input = rrideJSON.getBytes("utf-8");   // send the JSON as bye array input
+        os.write(input, 0, input.length);
+
+        //read the response from input stream
+        if (conWeb.getResponseCode() >= 400) {
+            //TODO: Add error output for the user
+            conWeb.disconnect();
+
+        } else {
+            try {
+
+                BufferedReader br = new BufferedReader(new InputStreamReader(conWeb.getInputStream(), "utf-8"));
+                StringBuilder response = new StringBuilder();
+                String responseLine = null;
+                while ((responseLine = br.readLine()) != null) {
+                    response.append(responseLine.trim());
+                }
+                String strResponse = response.toString();
+
+
+                ObjectMapper mapper = new ObjectMapper();
+                try {
+                    riderAcceptedRide = mapper.readValue(strResponse, Ride.class);
+                } catch (JsonGenerationException ge) {
+                    System.out.println(ge);
+                } catch (JsonMappingException me) {
+                    System.out.println(me);
+                }
+                startActivity(new Intent(RideDetailsActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Ride Successfully Posted: \n" + strResponse.toString() +"\n"+ conWeb.getResponseCode()));
+                //get response status code
+
+
+            } catch (IOException e) {
+                //TODO: Add error message for user
+                e.printStackTrace();
+            } finally {
+                conWeb.disconnect();
+            }
+        }
+        return riderAcceptedRide;
+    }
+
+
+
 }
 
 

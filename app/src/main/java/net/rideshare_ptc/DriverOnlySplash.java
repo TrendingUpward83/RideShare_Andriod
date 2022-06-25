@@ -34,7 +34,7 @@ public class DriverOnlySplash extends AppCompatActivity {
 
         Button btnMainRet = (Button) findViewById(R.id.btnCarToMainMenu);
         //TODO: Route the below ALL RIDES Button the Rides Page that doesn't exist yet
-        Button btnAllRides = (Button) findViewById(R.id.btnCarToMyRides);
+        Button btnAllRides = (Button) findViewById(R.id.btnCarToAllRides);
         btnMainRet.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {

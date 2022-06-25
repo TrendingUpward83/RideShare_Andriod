@@ -76,7 +76,7 @@ public class DriverPostARide extends AppCompatActivity implements DatePickerDial
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_request_aride);
+        setContentView(R.layout.activity_driver_post_aride);
         //get the objects (input fields) from the activity - intialize views
         txtCalendar = (TextView) findViewById(R.id.txtCalendar);
         rpickupLocI = (EditText) findViewById(R.id.inptReqPickUpLoc);

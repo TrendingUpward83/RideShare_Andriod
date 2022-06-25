@@ -168,24 +168,17 @@ public class RideDetailsActivity extends AppCompatActivity {
 
     private void driverAcceptRide(Integer activeRideId, String driverId) throws IOException {
 
-        URL url = new URL("http://10.0.2.2:8080/acceptRide/Driver?driverID="+driverId); //set URL
+        URL url = new URL("http://10.0.2.2:8080/acceptRide/Driver?accRideId="+activeRideId +"&driverID="+driverId); //set URL
         HttpURLConnection conWeb = (HttpURLConnection) url.openConnection(); //open connection
-        conWeb.setRequestMethod("POST");//set request method
+        conWeb.setRequestMethod("PUT");//set request method
         conWeb.setRequestProperty("Content-Type", "application/json"); //set the request content-type header parameter
         conWeb.setDoOutput(true); //enable this to write content to the connection OUTPUT STREAM
         Ride updatedRide = new Ride();
         //Create the request body
         OutputStream os = conWeb.getOutputStream();
-        byte[] input = rrideJSON.getBytes("utf-8");   // send the JSON as bye array input
-        os.write(input, 0, input.length);
+        // send the JSON as bye array input
 
-        //read the response from input stream
-        if(conWeb.getResponseCode() >= 400)
-        {
-            //TODO: Add error output for the user
-            conWeb.disconnect();
-            return; //short circuit
-        }else{
+        Integer respCode = conWeb.getResponseCode();
             try{
                 BufferedReader br = new BufferedReader(new InputStreamReader(conWeb.getInputStream(), "utf-8"));
                 StringBuilder response = new StringBuilder();
@@ -218,7 +211,7 @@ public class RideDetailsActivity extends AppCompatActivity {
     }
 
 
-}
+
 
 
 

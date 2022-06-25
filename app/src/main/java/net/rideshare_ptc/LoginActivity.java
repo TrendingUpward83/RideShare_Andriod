@@ -145,14 +145,15 @@ public class LoginActivity extends AppCompatActivity {
                             startActivity(new Intent(LoginActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "User info: \n" + entEmailAdd));
                         }
                     }
-                    else if (entEmailAdd.contains(ptcCheck) && (entPassword.isEmpty()) || !entPassword.equals("password1")){
-                        startActivity(new Intent(LoginActivity.this, LoginWelcomeStatusActivity.class).putExtra("Login Status", "Please enter correct password or use fingerprint authentication. \n"));
-                    }
                     else if (!entEmailAdd.contains(ptcCheck)){
-                        startActivity(new Intent(LoginActivity.this, LoginWelcomeStatusActivity.class).putExtra("Login Status", "Please use a valid registered PTC Studetn E-mail address \n"));
+                        startActivity(new Intent(LoginActivity.this, LoginWelcomeStatusActivity.class).putExtra("Login Status", "Please use a valid registered PTC Student E-mail address "));
                     }
+                    else if (entEmailAdd.contains(ptcCheck) && (entPassword.isEmpty()) || !entPassword.equals("password1")){
+                        startActivity(new Intent(LoginActivity.this, LoginWelcomeStatusActivity.class).putExtra("Login Status", "Please enter correct password or use fingerprint authentication."));
+                    }
+
                     else {
-                        startActivity(new Intent(LoginActivity.this, LoginWelcomeStatusActivity.class).putExtra("Login Status", "This username does not appear to be registered. \n"));
+                        startActivity(new Intent(LoginActivity.this, LoginWelcomeStatusActivity.class).putExtra("Login Status", "This username does not appear to be registered. "));
                     }
                 }
             }
@@ -193,7 +194,7 @@ public class LoginActivity extends AppCompatActivity {
 
         }
         catch (IOException e){
-            startActivity(new Intent(LoginActivity.this, LoginWelcomeStatusActivity.class).putExtra("Login Status", "User info: \n ERROR \n"+ e + entEmailAdd));
+            startActivity(new Intent(LoginActivity.this, LoginWelcomeStatusActivity.class).putExtra("Login Status", "Invalid or Unregistered e-mail address entered."));
         }
     con.disconnect();
 

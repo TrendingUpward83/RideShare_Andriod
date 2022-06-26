@@ -1,34 +1,35 @@
-package net.rideshare_ptc;
 
-import androidx.appcompat.app.AppCompatActivity;
+        package net.rideshare_ptc;
 
-import android.content.Intent;
-import android.os.Build;
-import android.os.Bundle;
-import android.os.StrictMode;
-import android.text.method.ScrollingMovementMethod;
-import android.view.View;
-import android.widget.Button;
-import android.widget.TextView;
+        import androidx.appcompat.app.AppCompatActivity;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.UnsupportedEncodingException;
-import java.net.HttpURLConnection;
-import java.net.ProtocolException;
-import java.net.URL;
-import java.util.ArrayList;
+        import android.content.Intent;
+        import android.os.Build;
+        import android.os.Bundle;
+        import android.os.StrictMode;
+        import android.text.method.ScrollingMovementMethod;
+        import android.view.View;
+        import android.widget.Button;
+        import android.widget.TextView;
+
+        import java.io.BufferedReader;
+        import java.io.IOException;
+        import java.io.InputStreamReader;
+        import java.io.OutputStream;
+        import java.io.UnsupportedEncodingException;
+        import java.net.HttpURLConnection;
+        import java.net.ProtocolException;
+        import java.net.URL;
+        import java.util.ArrayList;
 
 
-import androidx.appcompat.app.AppCompatActivity;
+        import androidx.appcompat.app.AppCompatActivity;
 
-import com.fasterxml.jackson.core.JsonGenerationException;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonMappingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+        import com.fasterxml.jackson.core.JsonGenerationException;
+        import com.fasterxml.jackson.core.JsonProcessingException;
+        import com.fasterxml.jackson.core.type.TypeReference;
+        import com.fasterxml.jackson.databind.JsonMappingException;
+        import com.fasterxml.jackson.databind.ObjectMapper;
 
 
 
@@ -42,6 +43,7 @@ public class RideDetailsActivity extends AppCompatActivity {
     Button driverDetails;
     Button riderDetails;
     Button acceptRide;
+    Button rateRide;
     String rrideJSON;
     String userRiderId;
     String userDriverId;
@@ -56,6 +58,7 @@ public class RideDetailsActivity extends AppCompatActivity {
         driverDetails = (Button) findViewById(R.id.btnViewRideDriver);
         riderDetails = (Button) findViewById(R.id.btnViewRideRider);
         acceptRide = (Button) findViewById(R.id.btnAcceptRide);
+        rateRide = (Button) findViewById(R.id.btnRateRide);
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
         String rideInformation = bundle.getString("Ride Details");
@@ -154,19 +157,31 @@ public class RideDetailsActivity extends AppCompatActivity {
                     }
                 }
             });
+            rateRide.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    //is ride available
+                    if ((UserId == driverID || UserId ==riderID) && rideCompleted==0) { //if user accepted & ride is not complete
+                        if (rideTaken == 1 ) {//if ride has both parties, is then able to be possible to be complete
+                            startActivity(new Intent(RideDetailsActivity.this, RateRide.class)); //go to rating activity
+                        } else
+                            startActivity(new Intent(RideDetailsActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Unable to rate- this ride is already completed."));
+                    }
+                }
+            });
 
         }
     }
 
     public String getRideType(String driverId, String riderId){
-            if (driverId ==null){
-                RideType = "Requested";
-            }
-            else if (riderId==null){
-                RideType = "Posted";
-            }
+        if (driverId ==null){
+            RideType = "Requested";
+        }
+        else if (riderId==null){
+            RideType = "Posted";
+        }
 
-            return RideType;
+        return RideType;
     }
 
 
@@ -183,35 +198,35 @@ public class RideDetailsActivity extends AppCompatActivity {
         // send the JSON as bye array input
 
         Integer respCode = conWeb.getResponseCode();
-            try{
-                BufferedReader br = new BufferedReader(new InputStreamReader(conWeb.getInputStream(), "utf-8"));
-                StringBuilder response = new StringBuilder();
-                String responseLine = null;
-                while ((responseLine = br.readLine()) != null) {
-                    response.append(responseLine.trim());
-                }
-                String strResponse = response.toString();
-                ObjectMapper mapper = new ObjectMapper();
-                try {
-                    updatedRide = mapper.readValue(strResponse, Ride.class);
-                }
-                catch (JsonGenerationException ge){
-                    System.out.println(ge);
-                }
-                catch (JsonMappingException me) {
-                    System.out.println(me);
-                }
-
-                startActivity(new Intent(RideDetailsActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Ride Accepted \n  Details:\n" + updatedRide.toString()));
-                //get response status code
-
-            } catch (IOException e) {
-                //TODO: Add error message for user
-                e.printStackTrace();
-            }finally {
-                conWeb.disconnect();
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(conWeb.getInputStream(), "utf-8"));
+            StringBuilder response = new StringBuilder();
+            String responseLine = null;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
             }
+            String strResponse = response.toString();
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                updatedRide = mapper.readValue(strResponse, Ride.class);
+            }
+            catch (JsonGenerationException ge){
+                System.out.println(ge);
+            }
+            catch (JsonMappingException me) {
+                System.out.println(me);
+            }
+
+            startActivity(new Intent(RideDetailsActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Ride Accepted \n  Details:\n" + updatedRide.toString()));
+            //get response status code
+
+        } catch (IOException e) {
+            //TODO: Add error message for user
+            e.printStackTrace();
+        }finally {
+            conWeb.disconnect();
         }
+    }
     private void riderAcceptRide(Integer activeRideId, String riderId) throws IOException {
 
         URL url = new URL("http://10.0.2.2:8080/acceptRide/Rider?accRideId="+activeRideId +"&riderID="+riderId); //set URL
@@ -254,10 +269,7 @@ public class RideDetailsActivity extends AppCompatActivity {
             conWeb.disconnect();
         }
     }
-    }
-
-
-
+}
 
 
 

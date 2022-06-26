@@ -68,7 +68,7 @@
         android:textColor="@color/ptc_DkBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnViewRideRider"
-        app:layout_constraintHorizontal_bias="0.583"
+        app:layout_constraintHorizontal_bias="0.512"
         app:layout_constraintStart_toStartOf="parent" />
 
     <Button
@@ -86,13 +86,24 @@
         android:id="@+id/btnRideRetMenu"
         android:layout_width="133dp"
         android:layout_height="49dp"
-        android:layout_marginBottom="84dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginEnd="60dp"
+        android:layout_marginBottom="120dp"
         android:text="Menu"
         android:textColor="@color/ptc_DkBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0.485"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/btnAcceptRide"
-        app:layout_constraintVertical_bias="0.657" />
+        app:layout_constraintTop_toBottomOf="@+id/btnViewRideRider"
+        app:layout_constraintVertical_bias="1.0" />
+
+    <Button
+        android:id="@+id/btnRateRide"
+        android:layout_width="133dp"
+        android:layout_height="49dp"
+        android:layout_marginStart="44dp"
+        android:layout_marginBottom="120dp"
+        android:text="Rate Ride"
+        android:textColor="@color/ptc_DkBlue"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>

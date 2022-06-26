@@ -48,6 +48,7 @@ public class RideDetailsActivity extends AppCompatActivity {
     String userRiderId;
     String userDriverId;
     String RideType;
+    String UserId;
 
 
     @Override
@@ -77,44 +78,53 @@ public class RideDetailsActivity extends AppCompatActivity {
         //get current user information
         LoginManager mgr = LoginManager.getInstance();
         User loggedInUser = mgr.getLoggedInUser();
-        String UserId = loggedInUser.getUserID();
+        UserId = loggedInUser.getUserID();
         //determine if user is a driver or rider
         Byte isDriver = loggedInUser.getIsDriver();
 
         rateRide.setVisibility(View.INVISIBLE);
+
        //hide buttons if rider/driver is not assigned
         if (active_ride.getRideInfo().getDriverID() == null) {
-            driverDetails.setVisibility(View.INVISIBLE);
+            acceptRide.setText("No Driver");
+            acceptRide.setEnabled(false);
         } else if (active_ride.getRideInfo().getRiderID() == null) {
-            riderDetails.setVisibility(View.INVISIBLE);
+            acceptRide.setText("No Rider");
+            acceptRide.setEnabled(false);
         }
 
         userDriverId = "";
         userRiderId = "";
         if (isDriver == 1) { //logged in user is A driver
-            userDriverId = loggedInUser.getUserID();
+            userDriverId = loggedInUser.getUserID();//to use to check driverID's for the rides
         } else if (isDriver == 0) {
             userRiderId = loggedInUser.getUserID();
         }
 
-        if (userRiderId.equals(riderID) || userDriverId.equals(driverID)) //if logged in user already assigned to a ride, hide accept button
-        {
-            acceptRide.setVisibility(View.INVISIBLE);
+        //hide accept ride in these cases
+        if ((rideCompleted ==1)){
+            acceptRide.setText("Unavailable");
+            acceptRide.setEnabled(false);
         }
-        if ((isDriver ==1)&& !activeRide.getDriverID().equals("")) //if logged in user is a driver but ride already has driver, can't accept
+        else if (UserId.equals(riderID) || UserId.equals(driverID)) //if logged in user already assigned to a ride, hide accept button
         {
-            acceptRide.setVisibility(View.INVISIBLE);
+            acceptRide.setText("Your are Assigned");
+            acceptRide.setEnabled(false);
         }
-        else if ((isDriver ==1)&& !activeRide.getRiderID().equals(""))//if logged in user is a rider but ride has rider, can't accept ride
+        else if ((isDriver ==1)&& !activeRide.getDriverID().equals("")) //if logged in user is a driver but ride already has driver, can't accept
         {
-            acceptRide.setVisibility(View.INVISIBLE);
+            acceptRide.setText("Unavailable");
+            acceptRide.setEnabled(false);
+        }
+        else if ((isDriver ==0)&& !activeRide.getRiderID().equals(""))//if logged in user is a rider but ride has rider, can't accept ride
+        {
+            acceptRide.setText("Unavailable");
+            acceptRide.setEnabled(false);
         }
 
-        if ((rideTaken ==1) || (rideCompleted ==1)){
-            acceptRide.setVisibility(View.INVISIBLE);
-        }
-        if ((userRiderId.equals(riderID) || userDriverId.equals(driverID)) && (rideTaken == 1)) {
-            rateRide.setVisibility(View.VISIBLE);
+       //rating
+        if ((UserId.equals(riderID) || UserId.equals(driverID)) && (rideTaken == 1) && (activeRide.getIsCompleted()==0)) { //rating logic is handled separately in rate ride activity
+            rateRide.setVisibility(View.VISIBLE); //if logged in user is assigned to the ride AND the ride has both a rider and driver
         }
 
 

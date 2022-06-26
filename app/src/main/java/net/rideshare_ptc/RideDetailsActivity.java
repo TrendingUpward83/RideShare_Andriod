@@ -142,8 +142,12 @@ public class RideDetailsActivity extends AppCompatActivity {
                                     e.printStackTrace();
                                 }
                             }
-                        } else if (RideType == "Posted") {
-
+                        } else if (RideType == "Posted") { //if driver posted, doesn't matter if driver or rider accept, driver is also rider.
+                            try {
+                                riderAcceptRide(activeRideID, UserId);
+                            } catch (IOException e) {
+                                e.printStackTrace();
+                            }
 
                         }
 
@@ -208,6 +212,48 @@ public class RideDetailsActivity extends AppCompatActivity {
                 conWeb.disconnect();
             }
         }
+    private void riderAcceptRide(Integer activeRideId, String riderId) throws IOException {
+
+        URL url = new URL("http://10.0.2.2:8080/acceptRide/Rider?accRideId="+activeRideId +"&riderID="+riderId); //set URL
+        HttpURLConnection conWeb = (HttpURLConnection) url.openConnection(); //open connection
+        conWeb.setRequestMethod("PUT");//set request method
+        conWeb.setRequestProperty("Content-Type", "application/json"); //set the request content-type header parameter
+        conWeb.setDoOutput(true); //enable this to write content to the connection OUTPUT STREAM
+        Ride updatedRide = new Ride();
+        //Create the request body
+        OutputStream os = conWeb.getOutputStream();
+        // send the JSON as bye array input
+
+        Integer respCode = conWeb.getResponseCode();
+        try{
+            BufferedReader br = new BufferedReader(new InputStreamReader(conWeb.getInputStream(), "utf-8"));
+            StringBuilder response = new StringBuilder();
+            String responseLine = null;
+            while ((responseLine = br.readLine()) != null) {
+                response.append(responseLine.trim());
+            }
+            String strResponse = response.toString();
+            ObjectMapper mapper = new ObjectMapper();
+            try {
+                updatedRide = mapper.readValue(strResponse, Ride.class);
+            }
+            catch (JsonGenerationException ge){
+                System.out.println(ge);
+            }
+            catch (JsonMappingException me) {
+                System.out.println(me);
+            }
+
+            startActivity(new Intent(RideDetailsActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Ride Accepted \n  Details:\n" + updatedRide.toString()));
+            //get response status code
+
+        } catch (IOException e) {
+            //TODO: Add error message for user
+            e.printStackTrace();
+        }finally {
+            conWeb.disconnect();
+        }
+    }
     }
 
 

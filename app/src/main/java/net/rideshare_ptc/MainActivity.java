@@ -38,7 +38,8 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //Will need to test/ confirm this works when we launch the web app
-                //startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://localhost:7298/")));
+                startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("https://ptcrideshare2022.azurewebsites.net")));
+
             }
         });
 

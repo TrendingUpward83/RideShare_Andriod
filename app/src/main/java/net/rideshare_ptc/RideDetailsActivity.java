@@ -81,7 +81,8 @@ public class RideDetailsActivity extends AppCompatActivity {
         //determine if user is a driver or rider
         Byte isDriver = loggedInUser.getIsDriver();
 
-
+        rateRide.setVisibility(View.INVISIBLE);
+       //hide buttons if rider/driver is not assigned
         if (active_ride.getRideInfo().getDriverID() == null) {
             driverDetails.setVisibility(View.INVISIBLE);
         } else if (active_ride.getRideInfo().getRiderID() == null) {
@@ -90,18 +91,29 @@ public class RideDetailsActivity extends AppCompatActivity {
 
         userDriverId = "";
         userRiderId = "";
-        if (isDriver == 1) {
+        if (isDriver == 1) { //logged in user is A driver
             userDriverId = loggedInUser.getUserID();
         } else if (isDriver == 0) {
             userRiderId = loggedInUser.getUserID();
         }
 
-        if (userRiderId.equals(riderID) || userDriverId.equals(driverID)) //if logged in user is ride driver or rider, can't accept
+        if (userRiderId.equals(riderID) || userDriverId.equals(driverID)) //if logged in user already assigned to a ride, hide accept button
+        {
             acceptRide.setVisibility(View.INVISIBLE);
+        }
+        if ((isDriver ==1)&& !activeRide.getDriverID().equals("")) //if logged in user is a driver but ride already has driver, can't accept
+        {
+            acceptRide.setVisibility(View.INVISIBLE);
+        }
+        else if ((isDriver ==1)&& !activeRide.getRiderID().equals(""))//if logged in user is a rider but ride has rider, can't accept ride
+        {
+            acceptRide.setVisibility(View.INVISIBLE);
+        }
+
         if ((rideTaken ==1) || (rideCompleted ==1)){
             acceptRide.setVisibility(View.INVISIBLE);
         }
-        if (rideTaken == 0 ) {
+        if ((userRiderId.equals(riderID) || userDriverId.equals(driverID)) && (rideTaken == 1)) {
             rateRide.setVisibility(View.VISIBLE);
         }
 

@@ -116,7 +116,7 @@ public class RideDetailsActivity extends AppCompatActivity {
             acceptRide.setText("Unavailable");
             acceptRide.setEnabled(false);
         }
-        else if ((isDriver ==0)&& !activeRide.getRiderID().equals(""))//if logged in user is a rider but ride has rider, can't accept ride
+        else if ((isDriver ==0)&& !activeRide.getRiderID().equals(""))//if logged  in user is a rider but ride has rider, can't accept ride
         {
             acceptRide.setText("Unavailable");
             acceptRide.setEnabled(false);

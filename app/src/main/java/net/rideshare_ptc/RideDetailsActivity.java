@@ -48,6 +48,8 @@ public class RideDetailsActivity extends AppCompatActivity {
     String userRiderId;
     String userDriverId;
     String RideType;
+    Byte isDriver;
+    User loggedInUser;
 
 
     @Override
@@ -81,6 +83,8 @@ public class RideDetailsActivity extends AppCompatActivity {
         //determine if user is a driver or rider
         Byte isDriver = loggedInUser.getIsDriver();
 
+        getUserRole();
+
 
         if (active_ride.getRideInfo().getDriverID() == null) {
             driverDetails.setVisibility(View.INVISIBLE);
@@ -88,14 +92,26 @@ public class RideDetailsActivity extends AppCompatActivity {
             riderDetails.setVisibility(View.INVISIBLE);
         }
 
-        userDriverId = "";
-        userRiderId = "";
-        if (isDriver == 1) {
-            userDriverId = loggedInUser.getUserID();
-        } else if (isDriver == 0) {
-            userRiderId = loggedInUser.getUserID();
+        if (active_ride.getRideInfo().getDriverID().equals(loggedInUser.getUserID())||active_ride.getRideInfo().getRiderID().equals(loggedInUser.getUserID())){
+            acceptRide.setVisibility(View.INVISIBLE);
         }
 
+
+        if (rideTaken == 1 || rideCompleted == 1) {
+            acceptRide.setVisibility(View.INVISIBLE);
+        } else {
+            getRideType(driverID, riderID);
+            if (RideType == "Requested") {
+                if (isDriver == 0) { //if ride has no driver and you're not a driver, can't accept
+                    acceptRide.setVisibility(View.INVISIBLE);
+                } else if (isDriver == 1) {//driver can accept
+                    acceptRide.setVisibility(View.VISIBLE);
+                }
+            } else if (RideType == "Posted") { //if driver posted, doesn't matter if driver or rider accept, driver is also rider.
+
+                    acceptRide.setVisibility(View.VISIBLE);
+            }
+        }
 
         int SDK_INT = Build.VERSION.SDK_INT;
         if (SDK_INT > 8) {
@@ -131,38 +147,31 @@ public class RideDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //is ride available
-                    if (rideTaken == 1 || rideCompleted == 1) {
-                        startActivity(new Intent(RideDetailsActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Sorry, this ride is not available"));
-                    } else {
                         getRideType(driverID, riderID);
                         if (RideType == "Requested") {
-                            if (isDriver == 0) { //if ride has no driver and you're not a driver, can't accept
-                                startActivity(new Intent(RideDetailsActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Sorry, rider cannot accept another rider's ride"));
-                            } else if (isDriver == 1) {//driver can accept
+
                                 try {
                                     driverAcceptRide(activeRideID, UserId);
                                 } catch (IOException e) {
                                     e.printStackTrace();
                                 }
-                            }
+
                         } else if (RideType == "Posted") { //if driver posted, doesn't matter if driver or rider accept, driver is also rider.
                             try {
                                 riderAcceptRide(activeRideID, UserId);
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
-
                         }
 
-                    }
                 }
             });
             rateRide.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     //is ride available
-                    if ((UserId == driverID || UserId ==riderID) && rideCompleted==0) { //if user accepted & ride is not complete
-                        if (rideTaken == 1 ) {//if ride has both parties, is then able to be possible to be complete
+                    if ((UserId.equals(driverID) || UserId.equals(riderID)) ) { //if user accepted & ride is not complete
+                        if (rideTaken == 1 && rideCompleted==0 ) {//if ride has both parties, is then able to be possible to be complete
                             startActivity(new Intent(RideDetailsActivity.this, RateRide.class)); //go to rating activity
                         } else
                             startActivity(new Intent(RideDetailsActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Unable to rate- this ride is already completed."));
@@ -267,6 +276,16 @@ public class RideDetailsActivity extends AppCompatActivity {
             e.printStackTrace();
         }finally {
             conWeb.disconnect();
+        }
+    }
+
+    public void getUserRole(){
+        userDriverId = "";
+        userRiderId = "";
+        if (isDriver == 1) {
+            userDriverId = loggedInUser.getUserID();
+        } else if (isDriver == 0) {
+            userRiderId = loggedInUser.getUserID();
         }
     }
 }

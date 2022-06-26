@@ -68,7 +68,7 @@ public class RateRide extends AppCompatActivity {
                 Toast.makeText(RateRide.this, rating, Toast.LENGTH_LONG).show();
                 //determine if we are rating the ride rider or driver
                 if (UserId.equals(driverID)){ //if logged in user is ride driver, rate rider
-                    if (activeRide.getDriverScore().isEmpty()|| activeRide.getDriverScore()== "0.00"){//if Driver did not rate rider, do not complete
+                    if (activeRide.getDriverScore().isEmpty()|| activeRide.getDriverScore().equals("0.0")){//if Driver did not rate rider, do not complete
                         try {
                             driverRateRider(activeRideID,rideRating, 0);
                         } catch (IOException e) {
@@ -83,7 +83,7 @@ public class RateRide extends AppCompatActivity {
                         }
                     }
                 } else if (UserId.equals(riderID)){//else if logged in user is rider, rate driver
-                    if (activeRide.getRiderScore().isEmpty()|| activeRide.getRiderScore()== "0.00"){//if Driver did not rate rider, do not complete
+                    if (activeRide.getRiderScore().isEmpty()|| activeRide.getRiderScore().equals( "0.0")){//if Driver did not rate rider, do not complete
                         try {
                             riderRateDriver(activeRideID,rideRating, 0);
                         } catch (IOException e) {

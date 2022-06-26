@@ -96,6 +96,15 @@ public class RideDetailsActivity extends AppCompatActivity {
             userRiderId = loggedInUser.getUserID();
         }
 
+        if (userRiderId.equals(riderID) || userDriverId.equals(driverID)) //if logged in user is ride driver or rider, can't accept
+            acceptRide.setVisibility(View.INVISIBLE);
+        if ((rideTaken ==1) || (rideCompleted ==1)){
+            acceptRide.setVisibility(View.INVISIBLE);
+        }
+        if (rideTaken == 0 ) {
+            rateRide.setVisibility(View.VISIBLE);
+        }
+
 
         int SDK_INT = Build.VERSION.SDK_INT;
         if (SDK_INT > 8) {
@@ -161,7 +170,7 @@ public class RideDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //is ride available
-                    if ((UserId == driverID || UserId ==riderID) && rideCompleted==0) { //if user accepted & ride is not complete
+                    if (UserId.equals(driverID) || UserId.equals(riderID)) { //if user accepted & ride is not complete
                         if (rideTaken == 1 ) {//if ride has both parties, is then able to be possible to be complete
                             startActivity(new Intent(RideDetailsActivity.this, RateRide.class)); //go to rating activity
                         } else

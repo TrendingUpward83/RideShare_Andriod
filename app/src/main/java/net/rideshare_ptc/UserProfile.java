@@ -1,12 +1,21 @@
 package net.rideshare_ptc;
 
+import static android.text.TextUtils.substring;
+
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.AppCompatImageView;
+
 import android.content.Intent;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 public class UserProfile extends AppCompatActivity {
     User loggedInUser;
@@ -26,6 +35,7 @@ public class UserProfile extends AppCompatActivity {
         TextView riderScore = (TextView) findViewById(R.id.txtRiderScore2);
         TextView driverScore = (TextView) findViewById(R.id.txtDriverScore2);
         TextView role = (TextView) findViewById(R.id.txtRole2);
+        ImageView pfp = (ImageView) findViewById(R.id.profileIMG);
 
 
         // Get Logged in user's info
@@ -34,6 +44,21 @@ public class UserProfile extends AppCompatActivity {
         isADriver = loggedInUser.getIsDriver();
         fName.setText(loggedInUser.getUserFName());
         lName.setText(loggedInUser.getUserLName());
+        String pullPhoto = loggedInUser.getProfileImgFile();
+
+
+        String photoLink = "a" + pullPhoto.substring(0, 8);
+
+
+
+        String PACKAGE_NAME = getApplicationContext().getPackageName();
+        int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+photoLink , null, null);
+        System.out.println("IMG ID :: "+imgId);
+        System.out.println("PACKAGE_NAME :: "+PACKAGE_NAME);
+        Bitmap bitmap = BitmapFactory.decodeResource(getResources(),imgId);
+        pfp.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
+
+
 
         float numRiderScore = loggedInUser.getuRiderScore();
         String riderScoreTxt = Float.toString(numRiderScore);

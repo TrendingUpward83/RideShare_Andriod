@@ -99,8 +99,6 @@ public class RateRide extends AppCompatActivity {
                     }
                 }
 
-
-
             }
         });
 

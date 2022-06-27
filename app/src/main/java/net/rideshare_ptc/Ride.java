@@ -238,7 +238,7 @@ public class Ride {
 
         @Override
         public String toString() {
-            return "\n  Pick Up: " + pickUpLoc + "\n  Destination: " + dest + "\n  Date and Time: " + rideDate+ "\n  Duration (hours): " + timeFormat.format((duration/3600)) + "\n  Distance (miles): " + distance + "\n  Cost: $" + String.valueOf(costFormat.format(cost))+"\n";
+            return "\n  Pick Up: " + pickUpLoc + "\n  Destination: " + dest + "\n  Date and Time: \n   " + rideDate+ "\n  Duration (minutes): " + timeFormat.format((duration/60)) + "\n  Distance (miles): " + distance + "\n  Cost: $" + String.valueOf(costFormat.format(cost))+"\n";
         }
 
     }

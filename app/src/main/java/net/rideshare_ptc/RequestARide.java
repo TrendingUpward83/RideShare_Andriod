@@ -51,7 +51,6 @@ public class RequestARide extends AppCompatActivity implements DatePickerDialog.
     Ride riderRidePost;
     EditText rpickupLocI;
     EditText rdestLocI;
-    EditText rrideDateTimeI;
     CheckBox rsmokingI;
     CheckBox reatingI;
     CheckBox rtalkingI;

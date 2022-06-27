@@ -31,30 +31,42 @@
         import com.fasterxml.jackson.databind.JsonMappingException;
         import com.fasterxml.jackson.databind.ObjectMapper;
 
+        import org.w3c.dom.Text;
 
 
+        public class RideDetailsActivity extends AppCompatActivity {
 
-public class RideDetailsActivity extends AppCompatActivity {
 
-
-    TextView rideDetails;
-    Ride ride = new Ride();
     Button returnToMenu;
     Button driverDetails;
     Button riderDetails;
     Button acceptRide;
     Button rateRide;
-    String rrideJSON;
     String userRiderId;
     String userDriverId;
     String RideType;
     String UserId;
+    String rideInformation;
+    User loggedInUser;
+    ActiveRide active_ride;
+    Ride activeRide;
+    Integer activeRideID;
+    String RdriverID;
+    String RriderID;
+    Byte rideTaken;
+    Byte isCompleted;
+    Byte isDriver;
+    String rideDriverScore;
+    String rideRiderScore;
+
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ride_details);
+        LoginManager mgr = LoginManager.getInstance();
+        loggedInUser = mgr.getLoggedInUser();
         returnToMenu = (Button) findViewById(R.id.btnRideRetMenu);
         driverDetails = (Button) findViewById(R.id.btnViewRideDriver);
         riderDetails = (Button) findViewById(R.id.btnViewRideRider);
@@ -62,71 +74,36 @@ public class RideDetailsActivity extends AppCompatActivity {
         rateRide = (Button) findViewById(R.id.btnRateRide);
         Intent intent = this.getIntent();
         Bundle bundle = intent.getExtras();
-        String rideInformation = bundle.getString("Ride Details");
+        rideInformation = bundle.getString("Ride Details");
         TextView msg = (TextView) findViewById(R.id.txtViewRideDetail);
         msg.setMovementMethod(new ScrollingMovementMethod());
         msg.setText(rideInformation);
 
         //get current ride information; should be available (is NOT taken)
-        ActiveRide active_ride = ActiveRide.getInstance();
-        Ride activeRide = active_ride.getRideInfo();
-        Integer activeRideID = activeRide.getRideID();
-        String driverID = activeRide.getDriverID();
-        String riderID = activeRide.getRiderID();
-        Byte rideTaken = activeRide.getIsTaken();
-        Byte rideCompleted = activeRide.getIsCompleted();
-        //get current user information
-        LoginManager mgr = LoginManager.getInstance();
-        User loggedInUser = mgr.getLoggedInUser();
-        UserId = loggedInUser.getUserID();
-        //determine if user is a driver or rider
-        Byte isDriver = loggedInUser.getIsDriver();
-
-        rateRide.setVisibility(View.INVISIBLE);
-
-       //hide buttons if rider/driver is not assigned
-        if (active_ride.getRideInfo().getDriverID() == null) {
-            acceptRide.setText("No Driver");
-            acceptRide.setEnabled(false);
-        } else if (active_ride.getRideInfo().getRiderID() == null) {
-            acceptRide.setText("No Rider");
-            acceptRide.setEnabled(false);
-        }
-
+        active_ride = ActiveRide.getInstance();
+        activeRide = active_ride.getRideInfo();
+        activeRideID = activeRide.getRideID();
+        RdriverID = activeRide.getDriverID();
+        RriderID = activeRide.getRiderID();
+        rideTaken = activeRide.getIsTaken();
+        isCompleted =activeRide.getIsCompleted();
         userDriverId = "";
         userRiderId = "";
-        if (isDriver == 1) { //logged in user is A driver
-            userDriverId = loggedInUser.getUserID();//to use to check driverID's for the rides
-        } else if (isDriver == 0) {
-            userRiderId = loggedInUser.getUserID();
-        }
+        rideDriverScore = activeRide.getDriverScore();
+        rideRiderScore = activeRide.getRiderScore();
 
-        //hide accept ride in these cases
-        if ((rideCompleted ==1)){
-            acceptRide.setText("Unavailable");
-            acceptRide.setEnabled(false);
-        }
-        else if (UserId.equals(riderID) || UserId.equals(driverID)) //if logged in user already assigned to a ride, hide accept button
-        {
-            acceptRide.setText("Your are Assigned");
-            acceptRide.setEnabled(false);
-        }
-        else if ((isDriver ==1)&& !activeRide.getDriverID().equals("")) //if logged in user is a driver but ride already has driver, can't accept
-        {
-            acceptRide.setText("Unavailable");
-            acceptRide.setEnabled(false);
-        }
-        else if ((isDriver ==0)&& !activeRide.getRiderID().equals(""))//if logged  in user is a rider but ride has rider, can't accept ride
-        {
-            acceptRide.setText("Unavailable");
-            acceptRide.setEnabled(false);
-        }
 
-       //rating
-        if ((UserId.equals(riderID) || UserId.equals(driverID)) && (rideTaken == 1) && (activeRide.getIsCompleted()==0)) { //rating logic is handled separately in rate ride activity
-            rateRide.setVisibility(View.VISIBLE); //if logged in user is assigned to the ride AND the ride has both a rider and driver
-        }
+        //get current user information
+        UserId = loggedInUser.getUserID();
+        //determine if user is a driver or rider
+        isDriver = loggedInUser.getIsDriver();
 
+
+
+        rateRide.setVisibility(View.INVISIBLE);
+        getRideType(RdriverID, RriderID);
+        setBtnStatusTxt(UserId,isDriver, RriderID, RdriverID,rideTaken,isCompleted);
+        setRatingStatus(rideDriverScore,rideRiderScore,RriderID, RdriverID);
 
         int SDK_INT = Build.VERSION.SDK_INT;
         if (SDK_INT > 8) {
@@ -162,10 +139,9 @@ public class RideDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //is ride available
-                    if (rideTaken == 1 || rideCompleted == 1) {
+                    if (rideTaken == 1 || isCompleted == 1) {
                         startActivity(new Intent(RideDetailsActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Sorry, this ride is not available"));
                     } else {
-                        getRideType(driverID, riderID);
                         if (RideType == "Requested") {
                             if (isDriver == 0) { //if ride has no driver and you're not a driver, can't accept
                                 startActivity(new Intent(RideDetailsActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Sorry, rider cannot accept another rider's ride"));
@@ -192,9 +168,10 @@ public class RideDetailsActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View v) {
                     //is ride available
-                    if (UserId.equals(driverID) || UserId.equals(riderID)) { //if user accepted & ride is not complete
-                        if (rideTaken == 1 ) {//if ride has both parties, is then able to be possible to be complete
+                    if (UserId.equals(RdriverID) || UserId.equals(RriderID)) { //if user accepted & ride is not complete
+                        if (rideTaken == 1) {//if ride has both parties, is then able to be possible to be complete
                             startActivity(new Intent(RideDetailsActivity.this, RateRide.class)); //go to rating activity
+
                         } else
                             startActivity(new Intent(RideDetailsActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Unable to rate- this ride is already completed."));
                     }
@@ -202,6 +179,51 @@ public class RideDetailsActivity extends AppCompatActivity {
             });
 
         }
+    }//end of onCreate
+
+    private void setBtnStatusTxt(String userId, Byte isDriver, String rriderID, String rdriverID, Byte ridetaken, Byte isCompleted) {
+        if ((userId.equals(rriderID) || userId.equals(rdriverID)) && (ridetaken == 1) && (isCompleted == 0)) { //rating logic is handled separately in rate ride activity
+            rateRide.setVisibility(View.VISIBLE); //if logged in user is assigned to the ride AND the ride has both a rider and driver
+        }
+        if (isDriver == 1) { //logged in user is A driver
+            userDriverId = userId;//know user is ride's driver
+        } else if (isDriver == 0) {
+            userRiderId = userId;//know user is  ride's rider
+        }
+
+        if (rdriverID == null) {
+            driverDetails.setText("No Driver");
+            driverDetails.setEnabled(false);
+        } else if (rriderID == null) {
+            riderDetails.setText("No Rider");
+            riderDetails.setEnabled(false);
+        }
+
+        //hide accept ride in these cases
+        if ((isCompleted ==1)){
+            acceptRide.setText("Ride Completed");
+            acceptRide.setEnabled(false);
+        }
+        else if (UserId.equals(rriderID) || UserId.equals(rdriverID)) //if logged in user already assigned to a ride, hide accept button
+        {
+            acceptRide.setText("You are Assigned");
+            acceptRide.setEnabled(false);
+        }
+        else if ((isDriver ==1)&& rdriverID != null) //if logged in user is a driver but ride already has driver, can't accept
+        {
+            acceptRide.setText("Unavailable");
+            acceptRide.setEnabled(false);
+        }
+        else if ((isDriver ==0)&& rriderID != null)//if logged  in user is a rider but ride has rider, can't accept ride
+        {
+            acceptRide.setText("Unavailable");
+            acceptRide.setEnabled(false);
+        }
+        else {
+            acceptRide.setText("Accept Ride");
+        }
+
+
     }
 
     public String getRideType(String driverId, String riderId){
@@ -215,6 +237,13 @@ public class RideDetailsActivity extends AppCompatActivity {
         return RideType;
     }
 
+    private void setRatingStatus(String rDriverScore,String rRiderScore, String rriderID, String rdriverID){
+        if  (rRiderScore==null && rDriverScore !=null || rRiderScore!= null && rDriverScore == null) {
+                rateRide.setText("Pending");
+        }
+        
+
+    }
 
     private void driverAcceptRide(Integer activeRideId, String driverId) throws IOException {
 
@@ -299,7 +328,10 @@ public class RideDetailsActivity extends AppCompatActivity {
         }finally {
             conWeb.disconnect();
         }
+
     }
+
+
 }
 
 

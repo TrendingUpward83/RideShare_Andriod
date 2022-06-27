@@ -64,7 +64,7 @@
         android:layout_width="142dp"
         android:layout_height="49dp"
         android:layout_marginBottom="184dp"
-        android:text="View  Driver"
+        android:text="View Driver"
         android:textColor="@color/ptc_DkBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/btnViewRideRider"
@@ -86,25 +86,24 @@
         android:id="@+id/btnRideRetMenu"
         android:layout_width="133dp"
         android:layout_height="49dp"
+        android:layout_marginStart="39dp"
         android:layout_marginEnd="56dp"
         android:layout_marginBottom="120dp"
         android:text="Menu"
         android:textColor="@color/ptc_DkBlue"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="1.0"
+        app:layout_constraintStart_toEndOf="@+id/btnRateRide"
         app:layout_constraintTop_toBottomOf="@+id/btnViewRideRider"
         app:layout_constraintVertical_bias="1.0" />
 
     <Button
         android:id="@+id/btnRateRide"
-        android:layout_width="143dp"
-        android:layout_height="49dp"
-        android:layout_marginStart="40dp"
-        android:layout_marginBottom="120dp"
+        android:layout_width="146dp"
+        android:layout_height="50dp"
         android:text="Rate Ride"
         android:textColor="@color/ptc_DkBlue"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/btnRideRetMenu"
-        app:layout_constraintHorizontal_bias="0.051"
-        app:layout_constraintStart_toStartOf="parent" />
+        tools:layout_editor_absoluteX="42dp"
+        tools:layout_editor_absoluteY="564dp" />
 </androidx.constraintlayout.widget.ConstraintLayout>

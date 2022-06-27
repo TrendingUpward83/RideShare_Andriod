@@ -206,7 +206,7 @@
         }
         else if (UserId.equals(rriderID) || UserId.equals(rdriverID)) //if logged in user already assigned to a ride, hide accept button
         {
-            acceptRide.setText("Your are Assigned");
+            acceptRide.setText("You are Assigned");
             acceptRide.setEnabled(false);
         }
         else if ((isDriver ==1)&& rdriverID != null) //if logged in user is a driver but ride already has driver, can't accept

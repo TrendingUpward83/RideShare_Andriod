@@ -182,7 +182,7 @@ public class RateRide extends AppCompatActivity {
                 System.out.println(me);
             }
 
-            startActivity(new Intent(RateRide.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Ride Rated, \n you gave driver a rating of "+updatedRide.getRiderScore()));
+            startActivity(new Intent(RateRide.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "Ride Rated, \n you gave rider a rating of "+updatedRide.getRiderScore()));
             //get response status code
 
         } catch (IOException e) {

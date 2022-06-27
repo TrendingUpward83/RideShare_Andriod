@@ -53,7 +53,7 @@ public class RideDriverCarInfo extends AppCompatActivity {
             usersCar = getCarData(driverID);
             userName.setText(fName);
             carDetails.setText(usersCar.toString());
-
+            
             //carDetails.setText("User has no active registered cars. \n Driver user cannot accept this any rides at this time.");
 
         } catch (IOException e) {

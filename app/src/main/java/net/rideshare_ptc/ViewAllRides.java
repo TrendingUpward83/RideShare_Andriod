@@ -28,6 +28,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class ViewAllRides extends AppCompatActivity {
@@ -52,6 +53,7 @@ public class ViewAllRides extends AppCompatActivity {
             StrictMode.setThreadPolicy(policy);
             try {
                 Rides = getRidesFromDB();
+                Rides.sort(Comparator.comparing(Ride::getPickUpLoc));
                 RideAdapter rideAdapter = new RideAdapter(this, Rides);
                 allRidesView = findViewById(R.id.ridesList);
                 allRidesView.setAdapter(rideAdapter);

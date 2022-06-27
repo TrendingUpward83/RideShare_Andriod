@@ -23,6 +23,7 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 public class MyRidesActivity extends AppCompatActivity {
 
@@ -56,12 +57,14 @@ public class MyRidesActivity extends AppCompatActivity {
                 StrictMode.setThreadPolicy(policy);
                     try {
                         myRides = getUserRidesFromDB();
+                        myRides.sort(Comparator.comparing(Ride::getPickUpLoc));
 
                         if (myRides == null){
                             startActivity(new Intent(MyRidesActivity.this, DriverOnlySplash.class).putExtra("Success Ride Posted", "  You have no rides scheduled."));
                         }
                         else {
                             RideAdapter myRideAdapter = new RideAdapter(this, myRides);
+
                             myRidesView = findViewById(R.id.myRidesList);
                             myRidesView.setAdapter(myRideAdapter);
                         }

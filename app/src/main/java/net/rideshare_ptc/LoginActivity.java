@@ -38,7 +38,7 @@ public class LoginActivity extends AppCompatActivity {
     EditText userEmailInpt;
     EditText userPWInpt;
     String entEmailAdd;// user's typed in e-mail address
-    String entPassword; // TODO: not yet implemented (password validation)
+    String entPassword; // TODO: not yet implemented (password validation)- unable to reverse engineer .net hash to replicate here
     String userInfoRes;
     User loggingUser = new User(); //create instance of User to capture deets of user attempting to login
     Integer respCode;
@@ -68,7 +68,7 @@ public class LoginActivity extends AppCompatActivity {
             // this means we can use biometric sensor
             case BiometricManager.BIOMETRIC_SUCCESS:
 
-                loginMsg.setText("You may use the fingerprint sensor to login, click fingerprint to begin");
+                loginMsg.setText("Enter username, then enter password or click fingerprint to begin");
                 //loginMsg.setTextColor(Color.parseColor("#fafafa"));
                 break;
 
@@ -103,7 +103,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onAuthenticationSucceeded(@NonNull BiometricPrompt.AuthenticationResult result) {
                 super.onAuthenticationSucceeded(result);
-                Toast.makeText(getApplicationContext(), "Login Success", Toast.LENGTH_SHORT).show();
+                Toast.makeText(getApplicationContext(), "Fingerprint accepted", Toast.LENGTH_SHORT).show();
                 loginMsg.setText("Biometric authentication successful, click Submit");
             }
             @Override

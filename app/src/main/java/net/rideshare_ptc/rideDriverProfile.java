@@ -73,10 +73,13 @@ public class rideDriverProfile extends AppCompatActivity {
                     String PACKAGE_NAME = getApplicationContext().getPackageName();
                     int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+photoLink , null, null);
 
+
                     System.out.println("IMG ID :: "+imgId);
                     System.out.println("PACKAGE_NAME :: "+PACKAGE_NAME);
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(),imgId);
                     pfp.setImageBitmap(BitmapFactory.decodeResource(getResources(),imgId));
+
+
 
                     float numRiderScore = aUser.getuRiderScore();
                     String riderScoreTxt = Float.toString(numRiderScore);

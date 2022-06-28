@@ -74,9 +74,8 @@ public class rideRiderProfile extends AppCompatActivity {
 
                     String PACKAGE_NAME = getApplicationContext().getPackageName();
                     int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+photoLink , null, null);
-                    if (photoLink == "a"){
-                        imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/placeholder" , null, null);
-                    }
+
+
                     System.out.println("IMG ID :: "+imgId);
                     System.out.println("PACKAGE_NAME :: "+PACKAGE_NAME);
                     Bitmap bitmap = BitmapFactory.decodeResource(getResources(),imgId);

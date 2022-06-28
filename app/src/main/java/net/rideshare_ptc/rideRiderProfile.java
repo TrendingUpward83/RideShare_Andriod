@@ -70,10 +70,18 @@ public class rideRiderProfile extends AppCompatActivity {
 
                     String photoLink = "a" + pullPhoto.substring(0, 8);
 
+                    int checkExistence = getApplicationContext().getResources().getIdentifier(photoLink, "drawable", getApplicationContext().getPackageName());
 
 
                     String PACKAGE_NAME = getApplicationContext().getPackageName();
-                    int imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+photoLink , null, null);
+                    int imgId;
+
+                    if ( checkExistence != 0 ) {  // the resource exists...
+                        imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+photoLink , null, null);
+                    }
+                    else {  // checkExistence == 0  // the resource does NOT exist!!
+                        imgId = getResources().getIdentifier(PACKAGE_NAME+":drawable/"+"newplaceholder" , null, null);
+                    }
 
 
                     System.out.println("IMG ID :: "+imgId);
